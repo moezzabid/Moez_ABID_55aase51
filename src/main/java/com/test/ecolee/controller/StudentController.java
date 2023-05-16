@@ -24,10 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @AllArgsConstructor
@@ -104,8 +101,8 @@ public class StudentController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "please pass sso token in the format Beare ", dataType = "String", paramType = "header", required = true),
     })
-    public ResponseEntity<Map<String, Object>> getAllStudentByClass(@RequestParam String name, @RequestParam(defaultValue = "0") int page,
-                                                                    @RequestParam(defaultValue = "3") int size) {
+    public ResponseEntity<Map<String, Object>> getAllStudentByClass(@RequestParam(value = "name",required = false) String name, @RequestParam(defaultValue = "0") int page,
+                                                                    @RequestParam(defaultValue = "10") int size) {
         try {
             List<Student> studentList = new ArrayList<Student>();
             Pageable paging = PageRequest.of(page, size);
@@ -127,13 +124,14 @@ public class StudentController {
         }
     }
 
-    @GetMapping("/getAllStudentByNameTeacher")
+    @GetMapping("/getAllStudentByNameTeacherAndClass")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "please pass sso token in the format Beare ", dataType = "String", paramType = "header", required = true),
     })
-    public ResponseEntity<List<Student>> getAllStudentByNameTeacher(@RequestParam String firstName, @RequestParam String lastName, Pageable pageable) {
-        final Page<Student> page = iClassService.getAllStudentByTeacher(pageable, firstName, lastName);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/getAllStudentByNameTeacher");
+    public ResponseEntity<List<Student>> getAllStudentByNameTeacherAndClassName(@RequestParam(value = "firstName",required = false ) String firstName, @RequestParam(value = "lastName",required = false ) String lastName,@RequestParam(value = "className",required = false ) String name, Pageable pageable) {
+        final Page<Student> page = iClassService.getAllStudentByTeacherAndClass(pageable, firstName, lastName,name);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/getAllStudentByNameTeacherAndClass");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 }
+

@@ -30,8 +30,19 @@ public class ClassServiceImpl implements IClassService {
 
     @Override
     public Page<Student> getAllStudentByTeacher(Pageable pageable, String firstName, String lastName) {
-        if (firstName != null && lastName != null) {
-            return studentRepository.findAllByFirstNameAndLastNameTeacher(pageable, firstName, lastName);
+        Optional<Teacher> teacherOptional = teacherRepository.findByFirstNameAndLastName(
+                firstName, lastName);
+
+        teacherOptional.ifPresent(teacherDb -> {
+            studentRepository.findAllByFirstNameAndLastNameTeacher(pageable, teacherDb.getFirstName(), teacherDb.getLastName());
+        });
+         return  getAllStudent(pageable);
+    }
+
+    @Override
+    public Page<Student> getAllStudentByTeacherAndClass(Pageable pageable, String firstName, String lastName, String name) {
+        if (firstName != null && lastName != null && name != null) {
+            return studentRepository.findAllByClasseAndAndFirstNameAndLastNameTeacher(pageable, firstName, lastName, name);
         }
         return getAllStudent(pageable);
     }

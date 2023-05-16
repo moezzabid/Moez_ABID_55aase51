@@ -11,6 +11,7 @@ public interface IClassService {
     Page<Student> getAllStudentByClass(Pageable pageable, String name);
 
     Page<Student> getAllStudentByTeacher(Pageable pageable, String firstName, String lastName);
+    Page<Student> getAllStudentByTeacherAndClass(Pageable pageable, String firstName, String lastName,String name);
 
     Page<Student> getAllStudent(Pageable pageable);
 

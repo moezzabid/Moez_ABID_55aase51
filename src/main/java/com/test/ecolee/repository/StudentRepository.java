@@ -21,4 +21,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Page<Student> findAllByFirstNameAndLastNameTeacher(Pageable pageable, @Param("firstName") String firstName, @Param("lastName") String lastName);
 
     Optional<Student> findByFirstNameAndLastName(String firstName,String lastName);
+
+    @Query(value = "select * from ec_student as s left join ec_class as c  on c.id = s.id_classe " +
+            "left join ec_teacher as t on  c.id= s.id_classe where t.first_name = :firstName and t.last_name = :lastName and c.name = :name ", nativeQuery = true)
+    Page<Student> findAllByClasseAndAndFirstNameAndLastNameTeacher( Pageable pageable, @Param("firstName") String firstName , @Param("lastName") String lastName ,@Param("name") String name );
 }
